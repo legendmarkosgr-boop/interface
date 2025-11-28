@@ -33,6 +33,33 @@ class UIElement:
         """Set the foreground (text) color of the UI element."""
         self.widget.config(fg=color)
 
+    def setFont(self, family="Arial", size=10, weight="normal"):
+        """Set the font of the UI element."""
+        self.widget.config(font=(family, size, weight))
+
+    def setPadding(self, padx=0, pady=0):
+        """Set internal padding of the UI element."""
+        if hasattr(self.widget, "config"):
+            self.widget.config(padx=padx, pady=pady)
+
+    def setBorder(self, width=1, style="flat"):
+        """Set border style and width."""
+        style_map = {"flat": tk.FLAT, "raised": tk.RAISED, "sunken": tk.SUNKEN, "groove": tk.GROOVE, "ridge": tk.RIDGE}
+        if style not in style_map:
+            raise ValueError("Style must be: flat, raised, sunken, groove, ridge")
+        self.widget.config(bd=width, relief=style_map[style])
+
+    def setCursor(self, cursor_type="arrow"):
+        """Set the cursor type when hovering over the element."""
+        self.widget.config(cursor=cursor_type)
+
+    def setOpacity(self, alpha=1.0):
+        """Set transparency (0.0 to 1.0). Note: Limited support in Tkinter."""
+        if 0.0 <= alpha <= 1.0:
+            self.widget.config(activeforeground=self.widget.cget("fg"))
+        else:
+            raise ValueError("Alpha must be between 0.0 and 1.0")
+
     def event(self, *functions):
         """
         Attach multiple functions to the component.
