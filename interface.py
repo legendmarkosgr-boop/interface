@@ -9,23 +9,28 @@ from tkinter import ttk
 # =====================================================
 
 class UIElement:
+    """Base class for all UI elements."""
     def __init__(self, widget):
         self.widget = widget
 
     def setText(self, text):
+        """Set the text of the UI element."""
         if hasattr(self.widget, "config"):
             self.widget.config(text=text)
 
     def setSize(self, width=None, height=None):
+        """Set the size of the UI element."""
         if width is not None:
             self.widget.config(width=width)
         if height is not None:
             self.widget.config(height=height)
 
     def setBackground(self, color):
+        """Set the background color of the UI element."""
         self.widget.config(bg=color)
 
     def setForeground(self, color):
+        """Set the foreground (text) color of the UI element."""
         self.widget.config(fg=color)
 
     def event(self, *functions):
@@ -39,6 +44,7 @@ class UIElement:
         self.widget.config(command=combined)
 
     def get(self):
+        """Get the current value of the UI element."""
         try:
             return self.widget.get()
         except:
@@ -50,16 +56,19 @@ class UIElement:
 # =====================================================
 
 class Button(UIElement):
+    """A clickable button."""
     def __init__(self, text=""):
         super().__init__(tk.Button(text=text))
 
 
 class Label(UIElement):
+    """A text label."""
     def __init__(self, text=""):
         super().__init__(tk.Label(text=text))
 
 
 class TextInput(UIElement):
+    """A single-line text input field."""
     def __init__(self, width=20):
         super().__init__(tk.Entry(width=width))
 
@@ -72,6 +81,7 @@ class TextInput(UIElement):
 
 
 class FrameBox(UIElement):
+    """A container that can hold other UI elements."""
     def __init__(self):
         self.frame = tk.Frame()
         super().__init__(self.frame)
@@ -86,6 +96,7 @@ class FrameBox(UIElement):
 # =====================================================
 
 class Interface:
+    """Main interface window."""
     def __init__(self):
         self.root = tk.Tk()
         self._layout = None
@@ -94,25 +105,35 @@ class Interface:
     # ---------------- Window ----------------
 
     def setTitle(self, title: str):
+        """Set the window title."""
         self.root.title(title)
 
     def setSize(self, width: int, height: int):
+        """Set the window size."""
         self.root.geometry(f"{width}x{height}")
 
     def setResizable(self, width: bool, height: bool):
+        """Set whether the window is resizable in width and height."""
         self.root.resizable(width, height)
 
     def setBackground(self, color: str):
+        """Set the window background color."""
         self.root.configure(bg=color)
+
+    def setIcon(self, icon_path: str):
+        """Set the window icon."""
+        self.root.iconbitmap(icon_path)
 
     # ---------------- Layout ----------------
 
     def setLayout(self, layout: str):
+        """Set the layout manager for the interface."""
         if layout not in ("pack", "grid", "place"):
             raise ValueError("Layout must be: pack, grid, or place")
         self._layout = layout
 
     def setPackSide(self, side: str):
+        """Set the side for pack layout."""
         side_map = {
             "top": tk.TOP,
             "bottom": tk.BOTTOM,
@@ -127,6 +148,7 @@ class Interface:
     # ---------------- Add Widgets ----------------
 
     def add(self, element: UIElement, **options):
+        """Add a UI element to the interface with the specified layout."""
         widget = element.widget
 
         if self._layout == "pack":
@@ -141,4 +163,5 @@ class Interface:
     # ---------------- Show Window ----------------
 
     def show(self):
+        """Display the interface window."""
         self.root.mainloop()
